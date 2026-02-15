@@ -6,6 +6,8 @@ export const app = new Elysia({
   prefix: '/api'
 })
 
+app.get('/', () => 'Hello World!')
+
 app.use(availableHoursController)
 
 app.use(setBookingFlowController)
