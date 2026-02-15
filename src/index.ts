@@ -1,14 +1,15 @@
-import { Elysia } from "elysia";
-import { availableHoursController } from "./controllers/appointments/available-hours-controller";
+import { Elysia } from 'elysia'
+import { availableHoursController } from './controllers/appointments/available-hours-controller'
+import { setBookingFlowController } from './controllers/flow/set-booking-flow'
 
 export const app = new Elysia({
-  prefix: "/api",
-});
+  prefix: '/api'
+})
 
-app.use(availableHoursController);
+app.use(availableHoursController)
 
-app.listen(3000);
+app.use(setBookingFlowController)
 
-console.log(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
-);
+app.listen(3333)
+
+console.log(`Elysia is running at ${app.server?.hostname}:${app.server?.port}`)

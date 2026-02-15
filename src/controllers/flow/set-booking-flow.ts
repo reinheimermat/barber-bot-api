@@ -1,7 +1,7 @@
 import Elysia, { t } from 'elysia'
 import { SetBookingFlowService } from '@/services/flow/set-booking-flow'
 
-export const availableHoursController = new Elysia().get(
+export const setBookingFlowController = new Elysia().get(
   '/booking-flow/:phoneNumberId',
   async (ctx) => {
     const { phoneNumberId } = ctx.params
