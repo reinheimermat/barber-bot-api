@@ -1,0 +1,14 @@
+services:
+  pg:
+    image: bitnami/postgresql:latest
+    container_name: pg
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: barber_bot
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/bitnami/postgresql
+volumes:
+  pg_data:

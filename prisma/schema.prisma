@@ -1,0 +1,136 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "./generated"
+  runtime  = "bun"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Barbershop {
+  id              String @id @default(cuid())
+  name            String
+  phone           String
+  wabaAccessToken String @unique @map("waba_access_token")
+  wabaPhoneId     String @unique @map("waba_phone_id")
+  wabaAccountId   String @unique @map("waba_account_id")
+
+  customers    Customer[]
+  barbers      Barber[]
+  appointments Appointment[]
+  services     Service[]
+
+  @@map("barbershops")
+}
+
+model Barber {
+  id       String  @id @default(cuid())
+  name     String
+  phone    String
+  isActive Boolean @default(false) @map("is_active")
+
+  appointments     Appointment[]
+  workHours        WorkHour[]
+  unavailabilities Unavailability[]
+
+  barbershop   Barbershop @relation(fields: [barbershopId], references: [id])
+  barbershopId String     @map("barbershop_id")
+
+  @@index([barbershopId])
+  @@map("barbers")
+}
+
+model Appointment {
+  id                    String @id @default(cuid())
+  googleCalendarEventId String @map("google_calendar_event_id")
+
+  startDate DateTime @map("startDate")
+  endDate   DateTime @map("endDate")
+
+  barber   Barber @relation(fields: [barberId], references: [id])
+  barberId String @map("barber_id")
+
+  barbershop   Barbershop @relation(fields: [barbershopId], references: [id])
+  barbershopId String     @map("barbershop_id")
+
+  customer   Customer? @relation(fields: [customerId], references: [id])
+  customerId String?   @map("customer_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([barbershopId, startDate, barberId])
+  @@index([googleCalendarEventId])
+  @@map("appointments")
+}
+
+model WorkHour {
+  id        String  @id @default(cuid())
+  dayOfWeek Int     @map("day_of_week") // 0-6 (0 = Sunday)
+  startTime String  @map("start_time") // Format: "HH:MM"
+  endTime   String  @map("end_time") // Format: "HH:MM"
+  isActive  Boolean @default(true) @map("is_active")
+
+  barber   Barber? @relation(fields: [barberId], references: [id])
+  barberId String? @map("barber_id")
+
+  @@index([barberId])
+  @@map("work_hours")
+}
+
+model Unavailability {
+  id          String   @id @default(cuid())
+  startDate   DateTime @map("start_date")
+  endDate     DateTime @map("end_date")
+  isRecurring Boolean  @default(false) @map("is_recurring")
+  dayOfWeek   Int?     @map("day_of_week") // 0-6 for recurring (null = all days)
+  isActive    Boolean  @default(true) @map("is_active")
+
+  barber   Barber @relation(fields: [barberId], references: [id], onDelete: Cascade)
+  barberId String @map("barber_id")
+
+  @@index([barberId, startDate])
+  @@map("unavailabilities")
+}
+
+model Customer {
+  id    String @id @default(cuid())
+  name  String
+  phone String
+
+  appointments Appointment[]
+
+  barbershop   Barbershop @relation(fields: [barbershopId], references: [id])
+  barbershopId String     @map("barbershop_id")
+
+  services Service[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([barbershopId, phone])
+  @@map("customers")
+}
+
+model Service {
+  id                String  @id @default(cuid())
+  name              String
+  description       String?
+  price             Float
+  durationInMinutes Int     @map("duration_in_minutes")
+
+  barbershop   Barbershop @relation(fields: [barbershopId], references: [id])
+  barbershopId String
+
+  customer   Customer? @relation(fields: [customerId], references: [id])
+  customerId String?
+
+  @@map("services")
+}

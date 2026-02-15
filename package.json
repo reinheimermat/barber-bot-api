@@ -1,15 +1,23 @@
 {
   "name": "barber-bot-api",
   "version": "1.0.50",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/index.ts"
+    "dev": "bun run --env-file=.env.local --watch src/index.ts"
   },
   "dependencies": {
-    "elysia": "latest"
+    "@prisma/adapter-pg": "^7.4.0",
+    "@prisma/client": "^7.4.0",
+    "elysia": "latest",
+    "pg": "^8.18.0"
   },
   "devDependencies": {
-    "bun-types": "latest"
+    "@biomejs/biome": "2.4.0",
+    "@types/pg": "^8.16.0",
+    "bun-types": "latest",
+    "dotenv": "^17.2.4",
+    "prisma": "^7.4.0"
   },
   "module": "src/index.js"
 }
