@@ -1,19 +1,21 @@
 import { prisma } from '@/lib/prisma'
 
-interface ScheduleFlowRequest {
-  decryptedBody: {
-    screen: string
-    action: string
-    data: {
-      action: 'FETCH_HOURS' | 'CONFIRM_BOOKING'
-      error?: string
-      barberId: string
-      date: string
-      hour: string
-    }
-    flow_token: string
-    version: string
+export interface DecryptedBody {
+  screen: string
+  action: string
+  data: {
+    action: 'FETCH_HOURS' | 'CONFIRM_BOOKING'
+    error?: string
+    barberId: string
+    date: string
+    hour: string
   }
+  flow_token: string
+  version: string
+}
+
+interface ScheduleFlowRequest {
+  decryptedBody: DecryptedBody
 }
 
 export abstract class ScheduleFlowService {

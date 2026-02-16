@@ -6,6 +6,7 @@
  */
 
 import crypto from 'node:crypto'
+import { DecryptedBody } from '@/services/schedule-flow'
 
 interface EncryptedRequestBody {
   encrypted_aes_key: string
@@ -14,7 +15,7 @@ interface EncryptedRequestBody {
 }
 
 interface DecryptedRequestResponse {
-  decryptedBody: Record<string, unknown>
+  decryptedBody: DecryptedBody
   aesKeyBuffer: Buffer
   initialVectorBuffer: Buffer
 }

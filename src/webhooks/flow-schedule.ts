@@ -9,6 +9,8 @@ export const flowScheduleWebhook = new Elysia().get(
     const { decryptedBody } = decryptRequest(ctx.body, env.PRIVATE_KEY, env.PASSPHRASE)
 
     const flow = await ScheduleFlowService.execute({ decryptedBody })
+
+    return flow
   },
   {
     body: t.Object({
