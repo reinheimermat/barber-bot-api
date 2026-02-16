@@ -1,6 +1,7 @@
 import { Elysia } from 'elysia'
 import { availableHoursController } from './controllers/appointments/available-hours-controller'
 import { setBookingFlowController } from './controllers/flow/set-booking-flow'
+import { flowScheduleWebhook } from './webhooks/flow-schedule'
 
 export const app = new Elysia({
   prefix: '/api'
@@ -11,6 +12,8 @@ app.get('/', () => 'Hello World!')
 app.use(availableHoursController)
 
 app.use(setBookingFlowController)
+
+app.use(flowScheduleWebhook)
 
 app.listen({
   port: parseInt(process.env.PORT || '3333'),
